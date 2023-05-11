@@ -23,22 +23,24 @@ void main()
 
   fpcur = fopen(FILENAME, "w");
 
+  /* initial condition*/
   xx[1] = -1.0;
   xx[2] =  1.0;
   yy[1] =  0.0;
   yy[2] =  0.0;
-
+ /* initial condition*/
+ 
   dt = 0.01*PI2/OMEGA;
   imaxtime=maxtime/dt;
 
   for (int itime = 0; itime <= imaxtime; itime++)
   {
     
-    time =dt * itime;
+    time = dt * itime;
 
     rk4(dt, time, xx, yy, xxout, yyout);
 
-    for (int ii = 1; ii <= NN; ii++)
+    for (int ii = 1; ii <= NN; ii++) 
     {
       xx[ii] = xxout[ii];
       yy[ii] = yyout[ii];
@@ -57,11 +59,8 @@ void rk4(double dt, double time, double *xx, double *yy, double *xxout, double *
   double ddxx1[NN + 2], ddyy1[NN + 2], ddxx2[NN + 2], ddyy2[NN + 2], ddxx3[NN + 2], ddyy3[NN + 2], ddxx4[NN + 2], ddyy4[NN + 2];
   double dthh = dt / 2.0, dt6 = dt / 6.0;
 
-  //
-  xx[0] = xx[1];
-  yy[0] = yy[1];
+  xx[0]      = xx[1];
   xx[NN + 1] = xx[NN];
-  yy[NN + 1] = yy[NN];
 
   /* start of 1st step*/
   derivxx(time, xx, yy, ddxx1);
@@ -72,10 +71,8 @@ void rk4(double dt, double time, double *xx, double *yy, double *xxout, double *
     yytt[ii] = yy[ii] + dthh * ddyy1[ii];
   }
   //
-  xxtt[0] = xxtt[1];
-  yytt[0] = yytt[1];
+  xxtt[0]      = xxtt[1];
   xxtt[NN + 1] = xxtt[NN];
-  yytt[NN + 1] = yytt[NN];
   /* end of 1st step*/
   //
   /* start of 2nd step*/
@@ -87,10 +84,8 @@ void rk4(double dt, double time, double *xx, double *yy, double *xxout, double *
     yytt[ii] = yy[ii] + dthh * ddyy2[ii];
   }
   //
-  xxtt[0] = xxtt[1];
-  yytt[0] = yytt[1];
+  xxtt[0]      = xxtt[1];
   xxtt[NN + 1] = xxtt[NN];
-  yytt[NN + 1] = yytt[NN];
   /* end of 2nd step*/
   //
   /* start of 3nd step*/
@@ -102,10 +97,8 @@ void rk4(double dt, double time, double *xx, double *yy, double *xxout, double *
     yytt[ii] = yy[ii] + dt * ddyy3[ii];
   }
   //
-  xxtt[0] = xxtt[1];
-  yytt[0] = yytt[1];
+  xxtt[0]      = xxtt[1];
   xxtt[NN + 1] = xxtt[NN];
-  yytt[NN + 1] = yytt[NN];
   /* end of 3nd step*/
   //
   /* start of 4th step*/
@@ -121,16 +114,10 @@ void rk4(double dt, double time, double *xx, double *yy, double *xxout, double *
 //
 void derivxx(double time, double *xx, double *yy, double *ddxx)
 {
-  for (int ii = 1; ii <= NN; ii++)
-  {
-    ddxx[ii] = yy[ii];
-  }
+  for (int ii = 1; ii <= NN; ii++)    ddxx[ii] = yy[ii];
 }
 //
 void derivyy(double time, double *xx, double *yy, double *ddyy)
 {
-  for (int ii = 1; ii <= NN; ii++)
-  {
-    ddyy[ii] = xx[ii + 1] + xx[ii - 1] - 2.0 * xx[ii];
-  }
+  for (int ii = 1; ii <= NN; ii++)    ddyy[ii] = xx[ii + 1] + xx[ii - 1] - 2.0 * xx[ii];
 }
