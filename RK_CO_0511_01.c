@@ -14,6 +14,7 @@ void rk4(double, double, double *, double *, double *, double *);
 void derivxx(double, double *, double *, double *);
 void derivyy(double, double *, double *, double *);
 //
+
 void main()
 {
   double dt, maxtime = 20.0,time;
