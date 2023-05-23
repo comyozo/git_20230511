@@ -1,4 +1,4 @@
-/*NN=2に修正*/
+
 
 #include <stdio.h>
 #include <stdlib.h>
