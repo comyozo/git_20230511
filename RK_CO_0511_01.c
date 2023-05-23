@@ -5,18 +5,19 @@
 #define PI 3.141592653589793
 #define PI2 2.0 * 3.141592653589793
 #define NN 4
-//#define KK 1.0
+#define KK 1.0
 #define OMEGA 1.0
-#define FILENAME "dat3.dat"
+#define FILENAME "f1.dat"
 
 //
 void rk4(double, double, double *, double *, double *, double *);
 void derivxx(double, double *, double *, double *);
 void derivyy(double, double *, double *, double *);
 //
+
 void main()
 {
-  double dt, maxtime = 20.0,time;
+  double dt, maxtime = 100.0,time;
   double xx[NN + 2], yy[NN + 2], xxout[NN + 2], yyout[NN + 2];
   FILE *fpcur;
   int imaxtime;
@@ -24,10 +25,10 @@ void main()
   fpcur = fopen(FILENAME, "w");
 
   /* initial condition*/
-  xx[1] = 1.0;
-  xx[2] = 0.0;
-  xx[3] = 0.0;
-  xx[4] = -1.0;
+  xx[1] = -2.0;
+  xx[2] = -1.0;
+  xx[3] =  1.0;
+  xx[4] =  2.0;
   yy[1] =  0.0;
   yy[2] =  0.0;
   yy[3] =  0.0;
@@ -50,8 +51,8 @@ void main()
       yy[ii] = yyout[ii];
     }
 
-    printf("time = %10.3lf xx1= %10.3lf   xx2=  %10.3lf  xx3=  %10.3lf xx4=  %10.3lf \n", time, xx[1], xx[2],xx[3],xx[4]);
-    fprintf(fpcur, "%10.3lf %10.3lf %10.3lf %10.3lf %10.3lf %10.3lf %10.3lf %10.3lf %10.3lf\n", time, xx[1], yy[1],xx[2], yy[2],xx[3], yy[3],xx[4], yy[4]);
+    printf("time = %10.3lf xx1= %10.3lf   xx2=  %10.3lf    xx3= %10.3lf   xx4=  %10.3lf\n", time, xx[1], xx[2], xx[3], xx[4]);
+    fprintf(fpcur, "%10.3lf %10.3lf %10.3lf %10.3lf %10.3lf %10.3lf %10.3lf %10.3lf %10.3lf\n", time, xx[1], yy[1],xx[2], yy[2], xx[3], yy[3], xx[4], yy[4]);
   }
 
   fclose(fpcur);
@@ -123,5 +124,5 @@ void derivxx(double time, double *xx, double *yy, double *ddxx)
 //
 void derivyy(double time, double *xx, double *yy, double *ddyy)
 {
-  for (int ii = 1; ii <= NN; ii++)    ddyy[ii] = xx[ii + 1] + xx[ii - 1] - 2.0 * xx[ii];
+  for (int ii = 1; ii <= NN; ii++)    ddyy[ii] = xx[ii + 1] + xx[ii - 1] - 2.0 * xx[ii]+KK*(time-xx[ii]);
 }
