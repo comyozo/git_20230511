@@ -5,7 +5,7 @@
 #define PI 3.141592653589793
 #define PI2 2.0 * 3.141592653589793
 #define NN 4
-//#define KK 1.0
+#define KK 1.0
 #define OMEGA 1.0
 #define FILENAME "dat0427-06.dat"
 
@@ -16,7 +16,7 @@ void derivyy(double, double *, double *, double *);
 //
 void main()
 {
-  double dt, maxtime = 20.0,time;
+  double dt, maxtime = 100.0,time;
   double xx[NN + 2], yy[NN + 2], xxout[NN + 2], yyout[NN + 2];
   FILE *fpcur;
   int imaxtime;
@@ -123,5 +123,5 @@ void derivxx(double time, double *xx, double *yy, double *ddxx)
 //
 void derivyy(double time, double *xx, double *yy, double *ddyy)
 {
-  for (int ii = 1; ii <= NN; ii++)    ddyy[ii] = xx[ii + 1] + xx[ii - 1] - 2.0 * xx[ii];
+  for (int ii = 1; ii <= NN; ii++)    ddyy[ii] = xx[ii + 1] + xx[ii - 1] - 2.0 * xx[ii]+ KK * (time-xx[ii]);
 }
