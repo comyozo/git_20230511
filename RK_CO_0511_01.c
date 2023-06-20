@@ -46,8 +46,8 @@ int main(void)
   int flagslip,no_of_earthquake;
   double xxav0;
   double  eqtimestt[EVENTNO], eqtimesend[EVENTNO], eqmagnitude[EVENTNO];
-  double mmax=0;
-  double mmin=0;
+  double mmax = 0;
+  double mmin = 0;
 
   fpcur = fopen(FILENAME, "w");
 
@@ -175,11 +175,13 @@ int main(void)
     neq[(int)(( eqmagnitude[ii] - mmin )/neqdev)]++;
   }
 
-  for(int ii=0; ii<MNN; ii++)
+  for(int ii=0; ii<=MNN; ii++)
   {
     printf("%lf %d\n",ii*neqdev+mmin,neq[ii]);
     fprintf(fpcur,"%lf %d\n",ii*neqdev+mmin,neq[ii]);
   }
+
+  printf("mmin = %lf \nmmax = %lf \n",mmin,mmax);
 
 fclose(fpcur);
 }
