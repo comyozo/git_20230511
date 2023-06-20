@@ -21,14 +21,18 @@
 #define ReLU(vvv) (0.5 * (vvv + fabs(vvv)))
 #define FFVV(forcel, maxstfric, vvv) (FLAGSLIP(forcel, maxstfric, vvv) * (forcel + BETA * BK1DFORKF(vvv)))
 //
+#define MMIN -10
+#define MMAX 10
+#define MNN 10
+//
 #define ISEED 728761879 // seed of random number
 #define WIRAND 0.5      // width of initial displacement given by random number
 #define EVENTNO 100000
 #define FLAGINITRAND 1 // initial displacement is given by random numbers, otherwise initial displacement is 0.0
-#define NN 100
+#define NN 10
 // #define KK 1.0
 #define OMEGA 1.0
-#define FILENAME "dat0522-01.dat"
+#define FILENAME "dat0616-01.dat"
 
 //
 void rk4(double, double, double *, double *, double *, double *);
@@ -37,13 +41,16 @@ void derivyy(double, double *, double *, double *);
 //
 int main(void)
 {
-  double dt, maxtime = 100.0, time;
+  double dt, maxtime = 10009.0, time;
   double xx[NN + 2], yy[NN + 2], xxout[NN + 2], yyout[NN + 2];
   FILE *fpcur;
   int imaxtime;
   int flagslip, no_of_earthquake;
   double xxav0;
   double eqtimestt[EVENTNO], eqtimesend[EVENTNO], eqmagnitude[EVENTNO];
+
+  double neqdev = ((double)(MMAX - MMIN)) / MNN;
+  int neq[MNN];
 
   fpcur = fopen(FILENAME, "w");
 
@@ -78,7 +85,8 @@ int main(void)
   flagslip = 0;
   no_of_earthquake = 0;
   xxav0 = 0.0;
-  for (int ii = 1; ii <= NN; ii++) xxav0 += xx[ii];
+  for (int ii = 1; ii <= NN; ii++)
+    xxav0 += xx[ii];
 
   dt = 0.01;
   imaxtime = maxtime / dt;
@@ -117,8 +125,8 @@ int main(void)
       magnitude = log(sumslip);
       eqtimesend[no_of_earthquake] = time;
       eqmagnitude[no_of_earthquake] = magnitude;
-      printf("B. NO. = %5d¥n", no_of_earthquake);
-      no_of_earthquake ++ ;
+      /*printf("B. NO. = %5d¥n", no_of_earthquake);*/
+      no_of_earthquake++;
     }
 
     for (int ii = 1; ii <= NN; ii++)
@@ -127,13 +135,28 @@ int main(void)
       yy[ii] = yyout[ii];
     }
 
-    printf("time = %10.3lf xx1= %10.3lf  xx2=  %10.3lf\n", time, xx[1], xx[2], xx[3],xx[4]);
-    fprintf(fpcur, "%10.3lf %10.3lf %10.3lf %10.3lf %10.3lf\n", time, xx[1], xx[2], xx[3], xx[4]);
+    /*printf("time = %10.3lf xx1= %10.3lf  xx2=  %10.3lf\n", time, xx[1], xx[2], xx[3], xx[4]);
+    fprintf(fpcur, "%10.3lf %10.3lf %10.3lf %10.3lf %10.3lf\n", time, xx[1], xx[2], xx[3], xx[4]);*/
   }
 
   for (int ii = 0; ii < no_of_earthquake; ii++)
-   printf("No. = %5d tstt= %10.3lf   tend=   %10.3lf  mag = %10.3lf\n", ii, eqtimestt[ii], eqtimesend[ii], eqmagnitude[ii]);
-  printf("No. = %5d \n", no_of_earthquake);
+    /*printf("No. = %5d tstt= %10.3lf   tend=   %10.3lf  mag = %10.3lf\n", ii, eqtimestt[ii], eqtimesend[ii], eqmagnitude[ii]);
+  printf("No. = %5d \n", no_of_earthquake);*/
+
+  for (int ii = 0; ii == MNN-1; ii++)
+  {
+    neq[ii] = 0;
+  };
+
+  for (int ii = 0; ii <= no_of_earthquake - 1; ii++)
+  {
+    neq[(int)( eqmagnitude[ii] - MMIN/neqdev)]++;
+  };
+
+  for (int ii = 0; ii < MNN; ii++)
+  {
+    fprintf(fpcur, "%lf %d\n",ii*neqdev + MMIN ,neq[ii]);
+  }
 
   fclose(fpcur);
 }
