@@ -27,8 +27,8 @@
 #define NN 10
 //#define KK 1.0
 #define OMEGA 1.0
-#define MMIN -10
-#define MMAX 10
+//#define MMIN -10
+//#define MMAX 10
 #define MNN 10
 #define FILENAME "dat0522-02.dat"
 
@@ -39,13 +39,15 @@ void derivyy(double, double *, double *, double *);
 //
 int main(void)
 {
-  double dt, maxtime = 1000.0,time;
+  double dt, maxtime = 50000.0,time;
   double xx[NN + 2], yy[NN + 2], xxout[NN + 2], yyout[NN + 2];
   FILE *fpcur;
   int imaxtime;
   int flagslip,no_of_earthquake;
   double xxav0;
   double  eqtimestt[EVENTNO], eqtimesend[EVENTNO], eqmagnitude[EVENTNO];
+  double mmax=0;
+  double mmin=0;
 
   fpcur = fopen(FILENAME, "w");
 
@@ -130,6 +132,16 @@ int main(void)
       eqtimesend [no_of_earthquake] = time;
       eqmagnitude[no_of_earthquake] = magnitude;
 
+      if(magnitude > mmax)
+      {
+        mmax = magnitude;
+      }
+
+      if(magnitude < mmin)
+      {
+        mmin = magnitude;
+      }
+
       printf("B. No. = %5d \n", no_of_earthquake);
       no_of_earthquake ++;
 
@@ -152,7 +164,7 @@ int main(void)
 
   
 
-  double neqdev=((double)(MMAX-MMIN))/MNN;
+  double neqdev=((double)( mmax - mmin ))/MNN;
   int neq[MNN];
   for(int ii=0;ii==MNN-1;ii++)
   {
@@ -160,13 +172,13 @@ int main(void)
   }
   for(int ii=0; ii<=no_of_earthquake-1; ii++)
   {
-    neq[(int)(( eqmagnitude[ii] - MMIN )/neqdev)]++;
+    neq[(int)(( eqmagnitude[ii] - mmin )/neqdev)]++;
   }
 
   for(int ii=0; ii<MNN; ii++)
   {
-    printf("%lf %d\n",ii*neqdev+MMIN,neq[ii]);
-    fprintf(fpcur,"%lf %d\n",ii*neqdev+MMIN,neq[ii]);
+    printf("%lf %d\n",ii*neqdev+mmin,neq[ii]);
+    fprintf(fpcur,"%lf %d\n",ii*neqdev+mmin,neq[ii]);
   }
 
 fclose(fpcur);
