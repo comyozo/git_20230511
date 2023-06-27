@@ -33,7 +33,7 @@
 #define NN 10
 //#define KK 1.0
 #define OMEGA 1.0
-#define FILENAME "dat0616-01.dat"
+#define FILENAME "dat0620-01.dat"
 //
 //
 void rk4(double, double, double *, double *, double *, double *);
@@ -53,9 +53,6 @@ int main(void)
 
   double mmax = 0;
   double mmin = 0;
-
-  double neqdev = ((double)(mmax - mmin)) / MNN;
-  int neq[MNN];
 
   fpcur = fopen(FILENAME, "w");
 
@@ -171,6 +168,9 @@ int main(void)
 
   fclose(fpcur);*/
 
+  double neqdev = ((double)(mmax - mmin)) / MNN;
+  int neq[MNN];
+
   for (int ii = 0; ii == MNN-1; ii++)
   {
     neq[ii] = 0;
@@ -178,7 +178,7 @@ int main(void)
 
   for (int ii = 0; ii <= no_of_earthquake - 1; ii++)
   {
-    neq[(int)(eqmagnitude[ii] - mmin/neqdev)]++;
+    neq[(int)((eqmagnitude[ii] - mmin)/neqdev)]++;
   }
 
   for (int ii = 0; ii <= MNN; ii++)
